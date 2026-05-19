@@ -1,9 +1,23 @@
 /* =============================================
-   LOVE APP v2 — Full logic
+   LOVE APP v3 — живой стиль
    ============================================= */
 
 const tg = window.Telegram?.WebApp;
 if (tg) { tg.ready(); tg.expand(); tg.setHeaderColor('#111118'); tg.setBackgroundColor('#111118'); }
+
+// ---- TG Notifications ----
+const BOT_TOKEN = '8983936573:AAEDgrsXK6LxOBBID8ZR0BE318Wm2a3s1QY';
+const OWNER_ID = '1996701955';
+
+function notifyOwner(text) {
+  try {
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: OWNER_ID, text, parse_mode: 'HTML' }),
+    });
+  } catch(e) {}
+}
 
 // ==================== DATA ====================
 
@@ -19,112 +33,112 @@ const LEVELS = [
 ];
 
 const QUOTES = [
-  'Ты самая красивая на свете, и это не обсуждается!',
-  'Каждый день с тобой — маленькое чудо',
-  'Улыбнись — ты же знаешь, что ты моя слабость',
-  'Если бы любовь была Wi-Fi, у нас был бы вечный сигнал',
-  'Ты делаешь мой мир ярче просто тем, что ты есть',
-  'Скучаю. Прямо сейчас. Вот так вот.',
-  'Ты заслуживаешь всего самого лучшего. Серьёзно.',
-  'Обнимаю мысленно крепко-крепко-крепко',
-  'Ты лучшее, что случилось в моей жизни',
-  'Мне повезло больше, чем я заслуживаю',
-  'Хочу увидеть твою улыбку прямо сейчас',
-  'С тобой даже ничего не делать — это приключение',
-  'Ты мой любимый человек на этой планете',
-  'Я бы выбрал тебя в любой вселенной',
-  'Ты такая классная, что я до сих пор не верю своему счастью',
-  'Наша любовь сильнее любого Wi-Fi',
-  'Ты — моя самая красивая мысль',
-  'Знаешь что? Ты невероятная. Вот и всё.',
+  'я тебя любдюююю милая моя девочка сладкая!!!',
+  'ты самая красивая на свете и даж не спорь со мной',
+  'скучаюю по тебе прям щас.. вот прям ваще 😭',
+  'мне так повезло с тобой что аж страшно иногда',
+  'ты моя любимая вредина и это не лечится',
+  'хочу обнять тебя крепко крепко и не отпускать',
+  'каждый день с тобой это кайфффф',
+  'ты лучшее что вообще случалось в моей жизни серьёзно',
+  'если бы любовь была вайфай у нас был бы вечный сигнал',
+  'ты такая классная что я до сих пор не верю',
+  'обнимаю тебя мысленно крепкооо крепкоо',
+  'с тобой даже просто валяться на диване это счастье',
+  'ты мой любимый человечек на всей планете',
+  'я бы выбрал тебя в любой вселенной без вариантов',
+  'знаешь что?? ты невероятная. вот и всёёё.',
+  'ты заряжаешь меня какой то безумной энергией',
+  'хочу увидеть твою улыбочку прям сейчас 🥺',
+  'наша любовь сильнее любого вайфая и это факт',
 ];
 
 const QUESTS = [
-  { id:'q1', icon:'💌', name:'Напиши мне комплимент', reward:50, cur:'h', bg:'pink-bg' },
-  { id:'q2', icon:'🎬', name:'Выбери фильм на вечер', reward:60, cur:'h', bg:'purple-bg' },
-  { id:'q3', icon:'🎵', name:'Отправь нашу песню', reward:40, cur:'h', bg:'blue-bg' },
-  { id:'q4', icon:'📸', name:'Сделай милое селфи', reward:70, cur:'h', bg:'pink-bg' },
-  { id:'q5', icon:'⭐', name:'Загадай желание', reward:35, cur:'h', bg:'gold-bg' },
-  { id:'q6', icon:'🍕', name:'Реши что будем кушать', reward:30, cur:'h', bg:'orange-bg' },
-  { id:'q7', icon:'💭', name:'Расскажи лучший момент дня', reward:45, cur:'h', bg:'purple-bg' },
-  { id:'q8', icon:'😘', name:'Придумай нам новое прозвище', reward:55, cur:'h', bg:'pink-bg' },
-  { id:'q9', icon:'🎮', name:'Выбери игру на вечер', reward:50, cur:'h', bg:'green-bg' },
-  { id:'q10', icon:'💋', name:'Отправь 10 поцелуев подряд', reward:40, cur:'h', bg:'pink-bg' },
-  { id:'q11', icon:'📝', name:'3 вещи за которые благодарна', reward:45, cur:'h', bg:'blue-bg' },
-  { id:'q12', icon:'🎨', name:'Нарисуй нас двоих', reward:80, cur:'h', bg:'purple-bg' },
-  { id:'q13', icon:'🤳', name:'Фото того что видишь сейчас', reward:35, cur:'h', bg:'green-bg' },
-  { id:'q14', icon:'🗺️', name:'Выбери место для свидания', reward:65, cur:'h', bg:'blue-bg' },
-  { id:'q15', icon:'🏖️', name:'Придумай план на выходные', reward:60, cur:'h', bg:'orange-bg' },
-  { id:'q16', icon:'🎤', name:'Запиши голосовое "люблю"', reward:75, cur:'h', bg:'pink-bg' },
-  { id:'q17', icon:'📖', name:'Расскажи наш смешной момент', reward:50, cur:'h', bg:'gold-bg' },
-  { id:'q18', icon:'🌈', name:'Выбери цвет настроения', reward:25, cur:'h', bg:'purple-bg' },
-  { id:'q19', icon:'🧸', name:'Отправь мем про нас', reward:45, cur:'h', bg:'orange-bg' },
-  { id:'q20', icon:'✍️', name:'Напиши мини-стихотворение', reward:90, cur:'h', bg:'purple-bg' },
-  { id:'q21', icon:'🔮', name:'Предскажи наш вечер', reward:35, cur:'h', bg:'blue-bg' },
-  { id:'q22', icon:'🎭', name:'Изобрази меня голосовым', reward:70, cur:'h', bg:'gold-bg' },
-  { id:'q23', icon:'💐', name:'Скажи 5 комплиментов подряд', reward:55, cur:'h', bg:'pink-bg' },
-  { id:'q24', icon:'🌙', name:'Пожелай спокойной ночи', reward:30, cur:'h', bg:'blue-bg' },
-  { id:'q25', icon:'☀️', name:'Доброе утро с фоткой', reward:40, cur:'h', bg:'gold-bg' },
+  { id:'q1', icon:'💌', name:'напишии мне комплиментикк пжж 🥺', reward:50, cur:'h', bg:'pink-bg' },
+  { id:'q2', icon:'🎬', name:'выбирай фильмец на вечерок', reward:60, cur:'h', bg:'purple-bg' },
+  { id:'q3', icon:'🎵', name:'скинь нашу песенку мне', reward:40, cur:'h', bg:'blue-bg' },
+  { id:'q4', icon:'📸', name:'сделай милое селфачо для меня', reward:70, cur:'h', bg:'pink-bg' },
+  { id:'q5', icon:'⭐', name:'загадай желание и я попробую исполнить', reward:35, cur:'h', bg:'gold-bg' },
+  { id:'q6', icon:'🍕', name:'чоо будем кушатьь?? выбирай', reward:30, cur:'h', bg:'orange-bg' },
+  { id:'q7', icon:'💭', name:'расскажи чо классного было сегодня', reward:45, cur:'h', bg:'purple-bg' },
+  { id:'q8', icon:'😘', name:'придумай нам новое прозвищее', reward:55, cur:'h', bg:'pink-bg' },
+  { id:'q9', icon:'🎮', name:'во чо поиграем вечером?? давай', reward:50, cur:'h', bg:'green-bg' },
+  { id:'q10', icon:'💋', name:'отправь мне 10 поцелуйчиков подряд мууу', reward:40, cur:'h', bg:'pink-bg' },
+  { id:'q11', icon:'📝', name:'напиши 3 штуки за которые благодарна 💖', reward:45, cur:'h', bg:'blue-bg' },
+  { id:'q12', icon:'🎨', name:'нарисуй нас двоих!! даже палка палка пойдёт', reward:80, cur:'h', bg:'purple-bg' },
+  { id:'q13', icon:'🤳', name:'скинь фотку того что видишь прям щас', reward:35, cur:'h', bg:'green-bg' },
+  { id:'q14', icon:'🗺️', name:'куда пойдём на свиданочку? выбирай', reward:65, cur:'h', bg:'blue-bg' },
+  { id:'q15', icon:'🏖️', name:'придумай план на выхи!! хочу кайфовать', reward:60, cur:'h', bg:'orange-bg' },
+  { id:'q16', icon:'🎤', name:'запиши голосовуху "люблююю тебя"', reward:75, cur:'h', bg:'pink-bg' },
+  { id:'q17', icon:'📖', name:'вспомни наш самый угарный момент', reward:50, cur:'h', bg:'gold-bg' },
+  { id:'q18', icon:'🌈', name:'какой цвет у твоего настроения щас?', reward:25, cur:'h', bg:'purple-bg' },
+  { id:'q19', icon:'🧸', name:'скинь мемасик про нас 😂', reward:45, cur:'h', bg:'orange-bg' },
+  { id:'q20', icon:'✍️', name:'напиши мне мини стишок (даже смешной)', reward:90, cur:'h', bg:'purple-bg' },
+  { id:'q21', icon:'🔮', name:'предскажи какой у нас будет вечер', reward:35, cur:'h', bg:'blue-bg' },
+  { id:'q22', icon:'🎭', name:'изобрази меня голосовухой хахах', reward:70, cur:'h', bg:'gold-bg' },
+  { id:'q23', icon:'💐', name:'скажи 5 комплиментов без остановки гоу', reward:55, cur:'h', bg:'pink-bg' },
+  { id:'q24', icon:'🌙', name:'пожелай мне спокойной ночки 💤', reward:30, cur:'h', bg:'blue-bg' },
+  { id:'q25', icon:'☀️', name:'доброе утречко с фоточкой для меня', reward:40, cur:'h', bg:'gold-bg' },
 ];
 
 const GIFTS_H = [
-  { id:'gh1', icon:'🎬', name:'Киновечер на твой выбор', price:200, desc:'Выбираешь фильм — смотрим вместе!' },
-  { id:'gh2', icon:'🎵', name:'Плейлист 10 песен', price:150, desc:'Соберу песни специально для тебя' },
-  { id:'gh3', icon:'💬', name:'Комплимент-бомба', price:100, desc:'10 комплиментов без остановки!' },
-  { id:'gh4', icon:'🍕', name:'Заказ еды на твой вкус', price:300, desc:'Закажу всё что захочешь' },
-  { id:'gh5', icon:'🎮', name:'Игровой вечер', price:250, desc:'Весь вечер играем вместе' },
-  { id:'gh6', icon:'🧸', name:'Обнимашки 30 минут', price:80, desc:'Полчаса обнимашек без перерыва' },
-  { id:'gh7', icon:'💆', name:'Массаж спины', price:180, desc:'Профессиональный массажик' },
-  { id:'gh8', icon:'👩‍🍳', name:'Совместная готовка', price:220, desc:'Готовим вместе что-то вкусное' },
-  { id:'gh9', icon:'🚶', name:'Прогулка где скажешь', price:160, desc:'Идём куда покажешь пальцем' },
-  { id:'gh10', icon:'😂', name:'Мем-подборка', price:90, desc:'20 мемов специально для тебя' },
-  { id:'gh11', icon:'🧁', name:'Десерт-сюрприз', price:200, desc:'Куплю вкусняшку!' },
-  { id:'gh12', icon:'📺', name:'Сериал-марафон', price:350, desc:'Целый день смотрим твой сериал' },
-  { id:'gh13', icon:'🛁', name:'Вечер релакса', price:280, desc:'Ванна, свечи, музыка — всё устрою' },
-  { id:'gh14', icon:'📱', name:'День без телефона вместе', price:400, desc:'Только мы двое, никаких экранов' },
+  { id:'gh1', icon:'🎬', name:'киновечерок на твой выбор', price:200, desc:'выбираешь фильм и мы смотрим вместеее!' },
+  { id:'gh2', icon:'🎵', name:'плейлистик из 10 песенок', price:150, desc:'соберу треки специально для тебя кисулька' },
+  { id:'gh3', icon:'💬', name:'комплиментикк от любимово', price:100, desc:'10 комплиментов подряд без остановки!!' },
+  { id:'gh4', icon:'🍕', name:'закажу еду какую скажешь', price:300, desc:'хочешь пиццу? суши? тортик? всёё закажу' },
+  { id:'gh5', icon:'🎮', name:'игровой вечерок вместе', price:250, desc:'весь вечер играем во что захочешь' },
+  { id:'gh6', icon:'🧸', name:'обнимашечки 30 минуток', price:80, desc:'полчаса обнимаю и не отпускаюю' },
+  { id:'gh7', icon:'💆', name:'массажик спинки', price:180, desc:'профессиональный массажик от любимово 😌' },
+  { id:'gh8', icon:'👩‍🍳', name:'вместе чота приготовим', price:220, desc:'будем готовить вместе и кайфовать' },
+  { id:'gh9', icon:'🚶', name:'прогулочка куда скажешь', price:160, desc:'идём куда покажешь пальчиком' },
+  { id:'gh10', icon:'😂', name:'мемасики подборочка', price:90, desc:'20 отборных мемов специально для тебя' },
+  { id:'gh11', icon:'🧁', name:'вкусняшка-сюрприз', price:200, desc:'куплю тебе что-нибудь вкусненькоеее' },
+  { id:'gh12', icon:'📺', name:'сериальчик-марафон', price:350, desc:'целый день смотрим твой сериал и валяемся' },
+  { id:'gh13', icon:'🛁', name:'вечерок релакса', price:280, desc:'ванна свечки музычка — всё устрою для тебя' },
+  { id:'gh14', icon:'📱', name:'день без телефонов вместе', price:400, desc:'только мы двое никаких экранов целый день' },
 ];
 
 const GIFTS_G = [
-  { id:'gg1', icon:'💌', name:'Длинное письмо любви', price:5, desc:'Напишу от всего сердца' },
-  { id:'gg2', icon:'📞', name:'Спец звонок по заказу', price:10, desc:'Позвоню когда и где захочешь' },
-  { id:'gg3', icon:'🌹', name:'Сюрприз-свидание', price:15, desc:'Организую свидание-сюрприз' },
-  { id:'gg4', icon:'📱', name:'Сказка на ночь', price:8, desc:'Расскажу или прочитаю перед сном' },
-  { id:'gg5', icon:'🎨', name:'Цифровой портрет', price:12, desc:'Закажу или нарисую тебя' },
-  { id:'gg6', icon:'🎤', name:'Песня в моём исполнении', price:7, desc:'Спою для тебя (без гарантий качества)' },
-  { id:'gg7', icon:'⭐', name:'Звёздное свидание', price:20, desc:'Ночь под звёздами' },
-  { id:'gg8', icon:'👑', name:'Целый день по твоему плану', price:25, desc:'24 часа по твоим правилам' },
-  { id:'gg9', icon:'🎥', name:'Видео-признание в любви', price:9, desc:'Запишу видео специально для тебя' },
-  { id:'gg10', icon:'💝', name:'Секретное послание', price:6, desc:'Спрячу записку в неожиданном месте' },
-  { id:'gg11', icon:'🎪', name:'Квест-свидание', price:18, desc:'Придумаю квест с сюрпризами' },
-  { id:'gg12', icon:'📸', name:'Фотосессия для двоих', price:22, desc:'Устроим мини-фотосет' },
+  { id:'gg1', icon:'💌', name:'длинное письмо любвии', price:5, desc:'напишу от всего сердечка для тебя' },
+  { id:'gg2', icon:'📞', name:'спец звоночек по заказу', price:10, desc:'позвоню когда скажешь и буду говорить милости' },
+  { id:'gg3', icon:'🌹', name:'сюрприз-свиданочка', price:15, desc:'организую свидание сюрприз!!' },
+  { id:'gg4', icon:'📱', name:'сказочка на ночку', price:8, desc:'расскажу или прочитаю перед сном 🌙' },
+  { id:'gg5', icon:'🎨', name:'цифровой портретик', price:12, desc:'закажу или нарисую тебяя' },
+  { id:'gg6', icon:'🎤', name:'песенка в моём исполнении', price:7, desc:'спою для тебя (ну как могу хаха)' },
+  { id:'gg7', icon:'⭐', name:'звёздное свиданьице', price:20, desc:'ночь под звёздами с тобой' },
+  { id:'gg8', icon:'👑', name:'целый день по твоим правилам', price:25, desc:'24 часа делаю всё что скажешь!!' },
+  { id:'gg9', icon:'🎥', name:'видео-признание в любвии', price:9, desc:'запишу видос специально для тебя' },
+  { id:'gg10', icon:'💝', name:'секретная записочка', price:6, desc:'спрячу записку в неожиданном месте 🤫' },
+  { id:'gg11', icon:'🎪', name:'квест-свиданочка', price:18, desc:'придумаю квест с сюрпризами по городу' },
+  { id:'gg12', icon:'📸', name:'фотосессия для нас двоих', price:22, desc:'устроим мини фотосетик!!' },
 ];
 
 const ACHIEVEMENTS = [
-  { id:'a1', icon:'⚔️', name:'Первый квест', desc:'Выполнить 1 квест', cond: s => s.totalQ >= 1 },
-  { id:'a2', icon:'🗡️', name:'Квестоман', desc:'Выполнить 10 квестов', cond: s => s.totalQ >= 10 },
-  { id:'a3', icon:'⚔️', name:'Квест-мастер', desc:'Выполнить 30 квестов', cond: s => s.totalQ >= 30 },
-  { id:'a4', icon:'🏆', name:'Квест-легенда', desc:'Выполнить 100 квестов', cond: s => s.totalQ >= 100 },
-  { id:'a5', icon:'❤️', name:'Собиратель', desc:'Накопить 1000 ❤️ всего', cond: s => s.totalH >= 1000 },
-  { id:'a6', icon:'💖', name:'Сердечный магнат', desc:'Накопить 5000 ❤️ всего', cond: s => s.totalH >= 5000 },
-  { id:'a7', icon:'💎', name:'Алмазик', desc:'Накопить 20 💎 всего', cond: s => s.totalG >= 20 },
-  { id:'a8', icon:'💎', name:'Алмазный фонд', desc:'Накопить 100 💎 всего', cond: s => s.totalG >= 100 },
-  { id:'a9', icon:'🛍️', name:'Шопоголик', desc:'Купить 5 подарков', cond: s => s.totalBuy >= 5 },
-  { id:'a10', icon:'🎁', name:'Королева подарков', desc:'Купить 15 подарков', cond: s => s.totalBuy >= 15 },
-  { id:'a11', icon:'🔥', name:'Горячий streak', desc:'Streak 7 дней', cond: s => s.maxStreak >= 7 },
-  { id:'a12', icon:'👑', name:'Принцесса', desc:'Достичь 5 уровня', cond: s => lvlInfo(s.xp).lvl >= 5 },
-  { id:'a13', icon:'💰', name:'Щедрая душа', desc:'Потратить 3000 ❤️', cond: s => s.totalSpentH >= 3000 },
-  { id:'a14', icon:'✨', name:'Звезда', desc:'Собрать 5 достижений', cond: s => s.unlocked.length >= 5 },
-  { id:'a15', icon:'🌟', name:'Все звёзды', desc:'Собрать 10 достижений', cond: s => s.unlocked.length >= 10 },
+  { id:'a1', icon:'⚔️', name:'первый квестик', desc:'выполнить 1 квест', cond: s => s.totalQ >= 1 },
+  { id:'a2', icon:'🗡️', name:'квестоманка', desc:'выполнить 10 квестов', cond: s => s.totalQ >= 10 },
+  { id:'a3', icon:'⚔️', name:'квест-мастерица', desc:'выполнить 30 квестов', cond: s => s.totalQ >= 30 },
+  { id:'a4', icon:'🏆', name:'квест-легенда', desc:'выполнить 100 квестов', cond: s => s.totalQ >= 100 },
+  { id:'a5', icon:'❤️', name:'собирательница', desc:'накопить 1000 ❤️ всего', cond: s => s.totalH >= 1000 },
+  { id:'a6', icon:'💖', name:'сердечный магнатка', desc:'накопить 5000 ❤️ всего', cond: s => s.totalH >= 5000 },
+  { id:'a7', icon:'💎', name:'алмазикк', desc:'накопить 20 💎 всего', cond: s => s.totalG >= 20 },
+  { id:'a8', icon:'💎', name:'алмазный фондик', desc:'накопить 100 💎 всего', cond: s => s.totalG >= 100 },
+  { id:'a9', icon:'🛍️', name:'шопоголичка', desc:'купить 5 подарочков', cond: s => s.totalBuy >= 5 },
+  { id:'a10', icon:'🎁', name:'королева подарков', desc:'купить 15 подарочков', cond: s => s.totalBuy >= 15 },
+  { id:'a11', icon:'🔥', name:'горячий стрикк', desc:'streak 7 дней подряд', cond: s => s.maxStreak >= 7 },
+  { id:'a12', icon:'👑', name:'принцессочка', desc:'достичь 5 уровня', cond: s => lvlInfo(s.xp).lvl >= 5 },
+  { id:'a13', icon:'💰', name:'щедрая душенька', desc:'потратить 3000 ❤️', cond: s => s.totalSpentH >= 3000 },
+  { id:'a14', icon:'✨', name:'звёздочка', desc:'собрать 5 достижений', cond: s => s.unlocked.length >= 5 },
+  { id:'a15', icon:'🌟', name:'все звёздыы', desc:'собрать 10 достижений', cond: s => s.unlocked.length >= 10 },
 ];
 
 const DAILY_REWARDS = [
-  { h:30, g:0, t:'+30 ❤️' },
-  { h:50, g:0, t:'+50 ❤️' },
-  { h:40, g:1, t:'+40 ❤️ и +1 💎' },
-  { h:60, g:0, t:'+60 ❤️' },
-  { h:35, g:2, t:'+35 ❤️ и +2 💎' },
-  { h:80, g:0, t:'+80 ❤️' },
-  { h:50, g:3, t:'+50 ❤️ и +3 💎 — бонус недели!' },
+  { h:30, g:0, t:'+30 ❤️ ураааа' },
+  { h:50, g:0, t:'+50 ❤️ вооот так!!' },
+  { h:40, g:1, t:'+40 ❤️ и +1 💎 кайфф' },
+  { h:60, g:0, t:'+60 ❤️ огоо!!' },
+  { h:35, g:2, t:'+35 ❤️ и +2 💎 красоткаа' },
+  { h:80, g:0, t:'+80 ❤️ нифига себе!!' },
+  { h:50, g:3, t:'+50 ❤️ и +3 💎 бонус неделькии!!' },
 ];
 
 // ==================== STATE ====================
@@ -191,7 +205,7 @@ function addXP(n) {
   S.xp += n;
   const nw = lvlInfo(S.xp);
   if (nw.lvl > old) {
-    popup('🎉', `Уровень ${nw.lvl}!`, `Теперь ты «${nw.rank}»!`);
+    popup('🎉', `уровень ${nw.lvl}!!`, `поздравляюю!! теперь ты «${nw.rank}» 🥳`);
     confetti();
   }
   save();
@@ -260,10 +274,8 @@ const render = {
     const info = lvlInfo(S.xp);
     const di = new Date().getDate();
 
-    // quote
     document.getElementById('home-quote').textContent = QUOTES[di % QUOTES.length];
 
-    // streak
     document.getElementById('streak-num').textContent = S.streak;
     const dots = document.getElementById('streak-dots');
     dots.innerHTML = '';
@@ -273,7 +285,6 @@ const render = {
       dots.appendChild(d);
     }
 
-    // daily banner
     const banner = document.getElementById('daily-banner');
     const btn = document.getElementById('db-btn');
     const sub = document.getElementById('db-sub');
@@ -281,27 +292,24 @@ const render = {
       banner.classList.add('claimed');
       btn.disabled = true;
       btn.textContent = 'ПОЛУЧЕНО ✓';
-      sub.textContent = 'Возвращайся завтра!';
+      sub.textContent = 'приходи завтрааа 💤';
     } else {
       banner.classList.remove('claimed');
       btn.disabled = false;
       btn.textContent = 'ОТКРЫТЬ';
-      sub.textContent = 'Нажми чтобы получить награду!';
+      sub.textContent = 'тыкай скорее!! тут подарочек 🎁';
     }
 
-    // xp
     document.getElementById('xp-lvl-name').textContent = info.rank;
     document.getElementById('xp-nums').textContent = `${S.xp - info.cur} / ${info.next - info.cur} XP`;
     document.getElementById('xp-fill').style.width = (info.pct * 100) + '%';
 
-    // mini quests on home (first 2)
     const hq = document.getElementById('home-quests');
     hq.innerHTML = '';
     (S.todayQ || []).slice(0, 2).forEach(qid => {
       const q = QUESTS.find(x => x.id === qid);
       if (!q) return;
-      const done = S.doneQ[qid];
-      hq.appendChild(makeQCard(q, done));
+      hq.appendChild(makeQCard(q, S.doneQ[qid]));
     });
 
     updHeader();
@@ -320,7 +328,6 @@ const render = {
     });
     document.getElementById('q-counter').textContent = `${doneN}/${S.todayQ.length}`;
 
-    // achievements
     const al = document.getElementById('achiev-list');
     al.innerHTML = '';
     ACHIEVEMENTS.forEach(a => {
@@ -388,7 +395,7 @@ const render = {
     const hl = document.getElementById('history-list');
     hl.innerHTML = '';
     if (!S.history.length) {
-      hl.innerHTML = '<div class="empty-msg">Пока пусто — загляни в магазин!</div>';
+      hl.innerHTML = '<div class="empty-msg">пока пусто — загляни в магазинчик! 🛍️</div>';
     } else {
       S.history.forEach(h => {
         const d = document.createElement('div');
@@ -453,7 +460,7 @@ function claimDaily() {
       addXP(25);
       save();
 
-      popup('🎁', 'Подарок открыт!', rw.t);
+      popup('🎁', 'подарочек открыт!!', rw.t);
       confetti();
       render.home();
       checkAch();
@@ -479,11 +486,9 @@ function doQuest(qid) {
 
   showReward(`+${q.reward} ${q.cur==='h'?'❤️':'💎'}`);
 
-  // re-render current page
   if (curPage === 'home') render.home();
   else if (curPage === 'quests') render.quests();
 
-  // all done bonus
   const allDone = S.todayQ.every(id => S.doneQ[id]);
   if (allDone) {
     setTimeout(() => {
@@ -491,7 +496,7 @@ function doQuest(qid) {
       S.totalG += 3;
       addXP(100);
       save();
-      popup('⚔️', 'Все квесты выполнены!', 'Бонус: +3 💎 и +100 XP!');
+      popup('⚔️', 'все квесты сделаныы!!', 'бонус: +3 💎 и +100 XP!! молодецц 🥳');
       confetti();
       updHeader();
     }, 500);
@@ -504,7 +509,7 @@ function buyGift(item, tab) {
   const key = tab === 'hearts' ? 'hearts' : 'gems';
   if (S[key] < item.price) {
     haptic('error');
-    popup('😢', 'Не хватает!', `Нужно ещё ${item.price - S[key]} ${key==='hearts'?'❤️':'💎'}`);
+    popup('😢', 'не хватаетт(', `нужно ещё ${item.price - S[key]} ${key==='hearts'?'❤️':'💎'} копи дальшее`);
     return;
   }
   haptic('success');
@@ -519,10 +524,13 @@ function buyGift(item, tab) {
   addXP(75);
   save();
 
-  popup('🎉', 'Подарок активирован!', `${item.icon} ${item.name}\n\n${item.desc}`);
+  popup('🎉', 'подарочек активирован!!', `${item.icon} ${item.name}\n\n${item.desc}`);
   confetti();
   render.gifts();
   checkAch();
+
+  // уведомление тебе
+  notifyOwner(`🎁 Мирямочка купила подарок!\n\n${item.icon} <b>${item.name}</b>\n💬 ${item.desc}\n\n${key==='hearts' ? '❤️' : '💎'} Цена: ${item.price}`);
 }
 
 // tabs
@@ -539,7 +547,7 @@ function checkAch() {
       S.unlocked.push(a.id);
       save();
       setTimeout(() => {
-        popup('🏅', 'Новое достижение!', `${a.icon} ${a.name}\n${a.desc}`);
+        popup('🏅', 'новое достижение!!', `${a.icon} ${a.name}\n${a.desc}`);
         confetti();
       }, 700);
     }
@@ -645,9 +653,7 @@ function fmtDate(d) {
 // ==================== INIT ====================
 
 async function init() {
-  // clean up v1 data
   localStorage.removeItem('love_app_state');
-
   await load();
   processDaily();
   render.home();
