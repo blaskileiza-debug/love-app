@@ -406,7 +406,7 @@ const render = {
 
 function makeQCard(q, done) {
   const colors = ['green','orange','blue'];
-  const barColor = colors[hashStr(q.id) % colors.length + colors.length % colors.length] || 'green';
+  const barColor = colors[Math.abs(hashStr(q.id)) % colors.length];
   const d = document.createElement('div');
   d.className = 'q-card' + (done ? ' done' : '');
   d.innerHTML = `
@@ -431,21 +431,34 @@ function claimDaily() {
   if (S.giftClaimed) return;
   haptic('heavy');
 
-  const ri = ((S.streak-1) % DAILY_REWARDS.length + DAILY_REWARDS.length) % DAILY_REWARDS.length;
-  const rw = DAILY_REWARDS[ri];
+  const banner = document.getElementById('daily-banner');
+  const emoji = banner.querySelector('.db-emoji');
+  emoji.style.transform = 'scale(1.4) rotate(-10deg)';
+  emoji.style.transition = 'transform 0.3s cubic-bezier(0.34,1.56,0.64,1)';
 
-  S.hearts += rw.h;
-  S.gems += rw.g;
-  S.totalH += rw.h;
-  S.totalG += rw.g;
-  S.giftClaimed = true;
-  addXP(25);
-  save();
+  setTimeout(() => {
+    emoji.style.transform = 'scale(1.6) rotate(10deg)';
+    setTimeout(() => {
+      emoji.style.transform = '';
+      emoji.style.transition = '';
 
-  popup('🎁', 'Подарок открыт!', rw.t);
-  confetti();
-  render.home();
-  checkAch();
+      const ri = ((S.streak-1) % DAILY_REWARDS.length + DAILY_REWARDS.length) % DAILY_REWARDS.length;
+      const rw = DAILY_REWARDS[ri];
+
+      S.hearts += rw.h;
+      S.gems += rw.g;
+      S.totalH += rw.h;
+      S.totalG += rw.g;
+      S.giftClaimed = true;
+      addXP(25);
+      save();
+
+      popup('🎁', 'Подарок открыт!', rw.t);
+      confetti();
+      render.home();
+      checkAch();
+    }, 200);
+  }, 200);
 }
 
 document.getElementById('daily-banner').addEventListener('click', claimDaily);
@@ -632,6 +645,9 @@ function fmtDate(d) {
 // ==================== INIT ====================
 
 async function init() {
+  // clean up v1 data
+  localStorage.removeItem('love_app_state');
+
   await load();
   processDaily();
   render.home();
