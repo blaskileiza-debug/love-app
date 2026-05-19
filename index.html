@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Love App</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+
+    <header id="header">
+      <div class="hdr-left">
+        <div class="hdr-avatar">
+          <img id="hdr-avatar-img" src="" alt="" style="display:none">
+          <span id="hdr-avatar-letter">М</span>
+        </div>
+        <div class="hdr-info">
+          <div class="hdr-name">Мирямочка</div>
+          <div class="hdr-lvl" id="hdr-lvl">Lv. 1</div>
+        </div>
+      </div>
+      <div class="hdr-right">
+        <div class="hdr-currency coin-c">
+          <div class="coin-icon">❤️</div>
+          <span id="d-hearts">0</span>
+        </div>
+        <div class="hdr-currency gem-c">
+          <div class="gem-icon">💎</div>
+          <span id="d-gems">0</span>
+        </div>
+      </div>
+    </header>
+
+    <main id="main-scroll">
+
+      <!-- ===== HOME ===== -->
+      <div class="page active" id="p-home">
+
+        <div class="daily-banner" id="daily-banner">
+          <div class="db-bg"></div>
+          <div class="db-content">
+            <div class="db-emoji">🎁</div>
+            <div class="db-title">ЕЖЕДНЕВНЫЙ ПОДАРОК</div>
+            <div class="db-sub" id="db-sub">Нажми чтобы получить награду!</div>
+            <button class="db-btn" id="db-btn">ОТКРЫТЬ</button>
+          </div>
+          <div class="db-sparkle sp1">✨</div>
+          <div class="db-sparkle sp2">💫</div>
+          <div class="db-sparkle sp3">⭐</div>
+        </div>
+
+        <div class="streak-row" id="streak-row">
+          <div class="streak-fire">🔥</div>
+          <div class="streak-num" id="streak-num">0</div>
+          <div class="streak-txt">дней подряд</div>
+          <div class="streak-dots" id="streak-dots"></div>
+        </div>
+
+        <div class="home-quote" id="home-quote"></div>
+
+        <div class="xp-section">
+          <div class="xp-header">
+            <span id="xp-lvl-name">Искорка</span>
+            <span id="xp-nums">0/500</span>
+          </div>
+          <div class="xp-track">
+            <div class="xp-fill" id="xp-fill"></div>
+          </div>
+        </div>
+
+        <div class="section-title">Быстрые квесты</div>
+        <div id="home-quests"></div>
+
+      </div>
+
+      <!-- ===== QUESTS ===== -->
+      <div class="page" id="p-quests">
+
+        <div class="section-title">
+          <span>Ежедневные квесты</span>
+          <span class="counter" id="q-counter">0/5</span>
+        </div>
+        <div id="quests-list"></div>
+
+        <div class="section-title" style="margin-top:20px">Достижения</div>
+        <div id="achiev-list"></div>
+
+      </div>
+
+      <!-- ===== GIFTS ===== -->
+      <div class="page" id="p-gifts">
+
+        <div class="section-title">Магазин подарков</div>
+        <div class="tabs" id="gift-tabs">
+          <button class="tab active" data-t="hearts">❤️ Сердечки</button>
+          <button class="tab" data-t="gems">💎 Алмазики</button>
+        </div>
+        <div class="gift-grid" id="gift-grid"></div>
+
+      </div>
+
+      <!-- ===== PROFILE ===== -->
+      <div class="page" id="p-profile">
+
+        <div class="prof-top">
+          <div class="prof-avatar-ring">
+            <div class="prof-avatar">М</div>
+          </div>
+          <div class="prof-name">Мирямочка</div>
+          <div class="prof-rank" id="prof-rank">Искорка</div>
+          <div class="prof-sub" id="prof-sub">Level 1 · 0 XP</div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat"><div class="stat-n" id="s-streak">0</div><div class="stat-l">Макс streak</div></div>
+          <div class="stat"><div class="stat-n" id="s-quests">0</div><div class="stat-l">Квестов</div></div>
+          <div class="stat"><div class="stat-n" id="s-gifts">0</div><div class="stat-l">Подарков</div></div>
+          <div class="stat"><div class="stat-n" id="s-hearts">0</div><div class="stat-l">❤️ всего</div></div>
+        </div>
+
+        <div class="section-title">Бейджи</div>
+        <div class="badge-grid" id="badge-grid"></div>
+
+        <div class="section-title" style="margin-top:16px">История</div>
+        <div id="history-list"></div>
+
+      </div>
+
+    </main>
+
+    <nav id="nav">
+      <button class="nav-item active" data-p="home">
+        <span class="ni-icon">🏠</span><span class="ni-text">Главная</span>
+      </button>
+      <button class="nav-item" data-p="quests">
+        <span class="ni-icon">⚔️</span><span class="ni-text">Квесты</span>
+      </button>
+      <button class="nav-item" data-p="gifts">
+        <span class="ni-icon">🎁</span><span class="ni-text">Подарки</span>
+      </button>
+      <button class="nav-item" data-p="profile">
+        <span class="ni-icon">👑</span><span class="ni-text">Профиль</span>
+      </button>
+    </nav>
+
+    <!-- overlay -->
+    <div class="overlay" id="overlay">
+      <div class="popup" id="popup">
+        <div class="pop-icon" id="pop-icon"></div>
+        <div class="pop-title" id="pop-title"></div>
+        <div class="pop-text" id="pop-text"></div>
+        <button class="pop-btn" id="pop-btn" onclick="closePopup()">Окей!</button>
+      </div>
+    </div>
+
+    <canvas id="confetti"></canvas>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
